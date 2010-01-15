@@ -2,6 +2,7 @@ import objects.SchOBoolean;
 import objects.SchOFixNum;
 import objects.SchObject;
 import utils.MyInputStream;
+import utils.Utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +28,7 @@ public class Repl {
         int c;
 
         while ((c = in.read()) != -1) {
-            if (isspace(c)) {
+            if (Utils.isspace(c)) {
                 continue;
             } else if (c == '#') {
                 c = in.read();
@@ -40,7 +41,7 @@ public class Repl {
                         System.err.printf("unknown boolean literal\n");
                         System.exit(1);
                 }
-            } else if (isdigit(c) || c == '-') {
+            } else if (Utils.isdigit(c) || c == '-') {
                 short sign = 1;
                 long num = 0;
                 if (c == '-')
@@ -48,11 +49,11 @@ public class Repl {
                 else
                     in.unread(c);
 
-                while(isdigit(c = in.read()))
+                while(Utils.isdigit(c = in.read()))
                     num = num * 10 + (c - '0');
 
                 num *= sign;
-                if (is_delimiter(c)) {
+                if (Utils.isdelimiter(c)) {
                     in.unread(c);
                     return new SchOFixNum(num);
                 } else {
@@ -67,18 +68,6 @@ public class Repl {
         System.err.printf("Read Illegal State!\n");
         System.exit(1);
         return null; // Java is dumb
-    }
-
-    private boolean isdigit(int c) {
-        return c >= '0' && c <= '9';
-    }
-
-    private boolean is_delimiter(int c) {
-        return isspace(c) || c == -1 || c == '(' || c == ')' || c == '"';
-    }
-
-    private boolean isspace(int c) {
-        return c == ' ' || c == '\t' || c == '\n';
     }
 
     private boolean isfalse(SchObject obj) {
