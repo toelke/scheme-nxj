@@ -1,3 +1,4 @@
+import objects.SchOBoolean;
 import objects.SchOFixNum;
 import objects.SchObject;
 import utils.MyInputStream;
@@ -10,10 +11,16 @@ import java.io.PrintStream;
 public class Repl {
     MyInputStream in;
     PrintStream out;
+    SchObject sfalse;
+    SchObject strue;
+
 
     public Repl (InputStream i, OutputStream o) {
         in = new MyInputStream(i);
         out = new PrintStream(o);
+
+        sfalse = new SchOBoolean(false);
+        strue = new SchOBoolean(true);
     }
 
     public SchObject read() throws IOException {
@@ -22,6 +29,17 @@ public class Repl {
         while ((c = in.read()) != -1) {
             if (isspace(c)) {
                 continue;
+            } else if (c == '#') {
+                c = in.read();
+                switch(c) {
+                    case 't':
+                        return strue;
+                    case 'f':
+                        return sfalse;
+                    default:
+                        System.err.printf("unknown boolean literal\n");
+                        System.exit(1);
+                }
             } else if (isdigit(c) || c == '-') {
                 short sign = 1;
                 long num = 0;
@@ -29,7 +47,7 @@ public class Repl {
                     sign = -1;
                 else
                     in.unread(c);
-                
+
                 while(isdigit(c = in.read()))
                     num = num * 10 + (c - '0');
 
@@ -63,6 +81,18 @@ public class Repl {
         return c == ' ' || c == '\t' || c == '\n';
     }
 
+    private boolean isboolean(SchObject obj) {
+        return obj.type == SchObject.SchOType.BOOLEAN;
+    }
+
+    private boolean isfixnum(SchObject obj) {
+        return obj.type == SchObject.SchOType.FIXNUM;
+    }
+
+    private boolean isfalse(SchObject obj) {
+        return obj == sfalse;
+    }
+
     public SchObject eval(SchObject exp) {
         return exp;
     }
@@ -71,6 +101,9 @@ public class Repl {
         switch(obj.type) {
             case FIXNUM:
                 out.printf("%d", ((SchOFixNum)obj).value);
+                break;
+            case BOOLEAN:
+                out.printf("#%c", isfalse(obj) ? 'f':'t');
                 break;
             default:
                 System.err.printf("cannot write unknown type!\n");

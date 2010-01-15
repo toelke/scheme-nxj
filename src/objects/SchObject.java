@@ -2,7 +2,7 @@ package objects;
 
 public class SchObject {
     public enum SchOType {
-        FIXNUM
+        BOOLEAN, FIXNUM
     }
 
     public SchOType type;
