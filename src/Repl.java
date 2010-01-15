@@ -81,14 +81,6 @@ public class Repl {
         return c == ' ' || c == '\t' || c == '\n';
     }
 
-    private boolean isboolean(SchObject obj) {
-        return obj.type == SchObject.SchOType.BOOLEAN;
-    }
-
-    private boolean isfixnum(SchObject obj) {
-        return obj.type == SchObject.SchOType.FIXNUM;
-    }
-
     private boolean isfalse(SchObject obj) {
         return obj == sfalse;
     }
