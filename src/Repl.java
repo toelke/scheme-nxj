@@ -1,4 +1,5 @@
 import objects.SchOBoolean;
+import objects.SchOCharacter;
 import objects.SchOFixNum;
 import objects.SchObject;
 import utils.MyInputStream;
@@ -37,8 +38,10 @@ public class Repl {
                         return strue;
                     case 'f':
                         return sfalse;
+                    case '\\':
+                        return SchOCharacter.readCharacter(in);
                     default:
-                        System.err.printf("unknown boolean literal\n");
+                        System.err.printf("unknown boolean or character literal\n");
                         System.exit(1);
                 }
             } else if (Utils.isdigit(c) || c == '-') {
@@ -85,6 +88,21 @@ public class Repl {
                 break;
             case BOOLEAN:
                 out.printf("#%c", isfalse(obj) ? 'f':'t');
+                break;
+            case CHARACTER:
+                out.printf("#\\");
+                char c = ((SchOCharacter) obj).value;
+                switch(c) {
+                    case '\n':
+                        out.printf("newline");
+                        break;
+                    case ' ':
+                        out.printf("space");
+                        break;
+                    default:
+                        out.printf("%c", c);
+                        break;
+                }
                 break;
             default:
                 System.err.printf("cannot write unknown type!\n");

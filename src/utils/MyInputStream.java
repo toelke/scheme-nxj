@@ -24,6 +24,12 @@ public class MyInputStream extends InputStream {
 
     }
 
+    public int peek() throws IOException {
+        int c = read();
+        unread(c);
+        return c;
+    }
+
     public void unread(int c) {
         value = c;
         valid = true;

@@ -9,8 +9,12 @@ public class SchObject {
         return obj.type == SchOType.BOOLEAN;
     }
 
+    public static boolean ischaracter(SchObject obj) {
+        return obj.type == SchOType.CHARACTER;
+    }
+
     public enum SchOType {
-        BOOLEAN, FIXNUM
+        BOOLEAN, CHARACTER, FIXNUM
     }
 
     public SchOType type;
