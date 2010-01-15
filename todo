@@ -1,0 +1,17 @@
+
+repl:
+Takes InputStream for Reading and Outputstream for writing.
+Debugged with stdin/out; later for the nxt something else must be implemented.
+
+SfS:
+X Integers
+- Booleans
+- Characters
+- Strings
+- Empty List
+- Pairs
+- Symbols
+- Quote
+- Environments
+- If
+- Primitive Procedure Pt. 1
