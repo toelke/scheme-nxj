@@ -6,8 +6,8 @@ Debugged with stdin/out; later for the nxt something else must be implemented.
 SfS:
 X Integers
 X Booleans
-- Characters
-- Strings
+X Characters
+X Strings
 - Empty List
 - Pairs
 - Symbols

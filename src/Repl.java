@@ -1,7 +1,4 @@
-import objects.SchOBoolean;
-import objects.SchOCharacter;
-import objects.SchOFixNum;
-import objects.SchObject;
+import objects.*;
 import utils.MyInputStream;
 import utils.Utils;
 
@@ -62,6 +59,21 @@ public class Repl {
                 } else {
                     Utils.endWithError(1, "number not followed by delimiter!\n");
                 }
+            } else if (c == '"') {
+                StringBuilder sb = new StringBuilder();
+                while ((c = in.read()) != '"') {
+                    if (c == '\\') {
+                        c = in.read();
+                        if (c == 'n') {
+                            c = '\n';
+                        }
+                    }
+                    if (c == -1) {
+                        Utils.endWithError(1, "non-terminated string literal");
+                    }
+                    sb.append((char)c);
+                }
+                return new SchOString(sb.toString());
             } else {
                 Utils.endWithError(1, "Unexpected %c\n", (char)c);
             }
@@ -100,6 +112,26 @@ public class Repl {
                         out.printf("%c", c);
                         break;
                 }
+                break;
+            case STRING:
+                out.printf("\"");
+                for (char s: ((SchOString)obj).value.toCharArray()) {
+                    switch(s) {
+                        case '\n':
+                            out.printf("\\n");
+                            break;
+                        case '\\':
+                            out.printf("\\\\");
+                            break;
+                        case '"':
+                            out.printf("\\\"");
+                            break;
+                        default:
+                            out.printf("%c", s);
+                            break;
+                    }
+                }
+                out.printf("\"");
                 break;
             default:
                 Utils.endWithError(1, "cannot write unknown type!\n");

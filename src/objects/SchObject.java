@@ -13,8 +13,12 @@ public class SchObject {
         return obj.type == SchOType.CHARACTER;
     }
 
+    public static boolean isstring(SchObject obj) {
+        return obj.type == SchOType.STRING;
+    }
+
     public enum SchOType {
-        BOOLEAN, CHARACTER, FIXNUM
+        BOOLEAN, CHARACTER, STRING, FIXNUM
     }
 
     public SchOType type;
