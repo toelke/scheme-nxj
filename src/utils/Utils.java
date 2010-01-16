@@ -13,4 +13,9 @@ public class Utils {
     public static boolean isspace(int c) {
         return c == ' ' || c == '\t' || c == '\n';
     }
+
+    public static void endWithError(int i, String s, Object ... args) {
+        System.err.printf(s, args);
+        System.exit(1);
+    }
 }

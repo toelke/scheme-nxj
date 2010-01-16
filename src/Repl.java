@@ -41,8 +41,8 @@ public class Repl {
                     case '\\':
                         return SchOCharacter.readCharacter(in);
                     default:
-                        System.err.printf("unknown boolean or character literal\n");
-                        System.exit(1);
+                        Utils.endWithError(1, "unknown boolean or character literal\n");
+
                 }
             } else if (Utils.isdigit(c) || c == '-') {
                 short sign = 1;
@@ -60,16 +60,13 @@ public class Repl {
                     in.unread(c);
                     return new SchOFixNum(num);
                 } else {
-                    System.err.printf("number not followed by delimiter!\n");
-                    System.exit(1);
+                    Utils.endWithError(1, "number not followed by delimiter!\n");
                 }
             } else {
-                System.err.printf("Unexpected %c\n", (char)c);
-                System.exit(1);
+                Utils.endWithError(1, "Unexpected %c\n", (char)c);
             }
         }
-        System.err.printf("Read Illegal State!\n");
-        System.exit(1);
+        Utils.endWithError(1, "Read Illegal State!\n");
         return null; // Java is dumb
     }
 
@@ -105,8 +102,7 @@ public class Repl {
                 }
                 break;
             default:
-                System.err.printf("cannot write unknown type!\n");
-                System.exit(1);
+                Utils.endWithError(1, "cannot write unknown type!\n");
                 break;
         }
     }
