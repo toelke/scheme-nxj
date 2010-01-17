@@ -7,7 +7,7 @@ public class Utils {
     }
 
     public static boolean isdelimiter(int c) {
-        return Utils.isspace(c) || c == -1 || c == '(' || c == ')' || c == '"';
+        return Utils.isspace(c) || c == -1 || c == '(' || c == ')' || c == '"' || c == ';' || c == '\n';
     }
 
     public static boolean isspace(int c) {
