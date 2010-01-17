@@ -12,6 +12,7 @@ public class Repl {
     PrintStream out;
     SchObject sfalse;
     SchObject strue;
+    SchObject theEmptyList;
 
 
     public Repl (InputStream i, OutputStream o) {
@@ -20,6 +21,7 @@ public class Repl {
 
         sfalse = new SchOBoolean(false);
         strue = new SchOBoolean(true);
+        theEmptyList = new SchOTheEmptyList();
     }
 
     public SchObject read() throws IOException {
@@ -75,6 +77,14 @@ public class Repl {
                 sb.append((char)c);
             }
             return new SchOString(sb.toString());
+        } else if (c == '(') {
+            Utils.eat_whitespace(in);
+            c = in.read();
+            if (c == ')') {
+                return theEmptyList;
+            } else {
+                Utils.endWithError(1, "Unexpected Character '%c'\nExpecting ')\n", c);
+            }
         } else {
             System.err.printf("Unexpected %c\n", (char)c);
             System.exit(1);
@@ -133,6 +143,9 @@ public class Repl {
                     }
                 }
                 out.printf("\"");
+                break;
+            case THEEMPTYLIST:
+                out.printf("()");
                 break;
             default:
                 Utils.endWithError(1, "cannot write unknown type!\n");

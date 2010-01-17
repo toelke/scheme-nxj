@@ -16,9 +16,12 @@ public class SchObject {
     public boolean isstring() {
         return type == SchOType.STRING;
     }
+    public boolean istheemptylist() {
+        return type == SchOType.THEEMPTYLIST;
+    }
 
     public enum SchOType {
-        BOOLEAN, CHARACTER, STRING, FIXNUM
+        BOOLEAN, CHARACTER, STRING, THEEMPTYLIST, FIXNUM
     }
 
     public SchOType type;
