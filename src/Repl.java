@@ -25,58 +25,59 @@ public class Repl {
     public SchObject read() throws IOException {
         int c;
 
-        while ((c = in.read()) != -1) {
-            if (Utils.isspace(c)) {
-                continue;
-            } else if (c == '#') {
-                c = in.read();
-                switch(c) {
-                    case 't':
-                        return strue;
-                    case 'f':
-                        return sfalse;
-                    case '\\':
-                        return SchOCharacter.readCharacter(in);
-                    default:
-                        Utils.endWithError(1, "unknown boolean or character literal\n");
+        Utils.eat_whitespace(in);
 
-                }
-            } else if (Utils.isdigit(c) || c == '-') {
-                short sign = 1;
-                long num = 0;
-                if (c == '-')
-                    sign = -1;
-                else
-                    in.unread(c);
+        c = in.read();
 
-                while(Utils.isdigit(c = in.read()))
-                    num = num * 10 + (c - '0');
-
-                num *= sign;
-                if (Utils.isdelimiter(c)) {
-                    in.unread(c);
-                    return new SchOFixNum(num);
-                } else {
-                    Utils.endWithError(1, "number not followed by delimiter!\n");
-                }
-            } else if (c == '"') {
-                StringBuilder sb = new StringBuilder();
-                while ((c = in.read()) != '"') {
-                    if (c == '\\') {
-                        c = in.read();
-                        if (c == 'n') {
-                            c = '\n';
-                        }
-                    }
-                    if (c == -1) {
-                        Utils.endWithError(1, "non-terminated string literal");
-                    }
-                    sb.append((char)c);
-                }
-                return new SchOString(sb.toString());
-            } else {
-                Utils.endWithError(1, "Unexpected %c\n", (char)c);
+        if (c == '#') {
+            c = in.read();
+            switch(c) {
+                case 't':
+                    return strue;
+                case 'f':
+                    return sfalse;
+                case '\\':
+                    return SchOCharacter.readCharacter(in);
+                default:
+                    System.err.printf("unknown boolean or character literal\n");
+                    System.exit(1);
             }
+        } else if (Utils.isdigit(c) || c == '-' && Utils.isdigit(in.peek())) {
+            short sign = 1;
+            long num = 0;
+            if (c == '-')
+                sign = -1;
+            else
+                in.unread(c);
+
+            while(Utils.isdigit(c = in.read()))
+                num = num * 10 + (c - '0');
+
+            num *= sign;
+            if (Utils.isdelimiter(c)) {
+                in.unread(c);
+                return new SchOFixNum(num);
+            } else {
+                Utils.endWithError(1,"number not followed by delimiter!\n");
+            }
+        } else if (c == '"') {
+            StringBuilder sb = new StringBuilder();
+            while ((c = in.read()) != '"') {
+                if (c == '\\') {
+                    c = in.read();
+                    if (c == 'n') {
+                        c = '\n';
+                    }
+                }
+                if (c == -1) {
+                    Utils.endWithError(1, "non-terminated string literal");
+                }
+                sb.append((char)c);
+            }
+            return new SchOString(sb.toString());
+        } else {
+            System.err.printf("Unexpected %c\n", (char)c);
+            System.exit(1);
         }
         Utils.endWithError(1, "Read Illegal State!\n");
         return null; // Java is dumb
