@@ -72,7 +72,7 @@ public class Repl {
                     }
                 }
                 if (c == -1) {
-                    Utils.endWithError(1, "non-terminated string literal");
+                    Utils.endWithError(1, "non-terminated string literal\n");
                 }
                 sb.append((char)c);
             }
