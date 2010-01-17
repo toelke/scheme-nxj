@@ -1,20 +1,20 @@
 package objects;
 
 public class SchObject {
-    public static boolean isfixnum(SchObject obj) {
-        return obj.type == SchOType.FIXNUM;
+    public boolean isfixnum() {
+        return type == SchOType.FIXNUM;
     }
 
-    public static boolean isboolean(SchObject obj) {
-        return obj.type == SchOType.BOOLEAN;
+    public boolean isboolean() {
+        return type == SchOType.BOOLEAN;
     }
 
-    public static boolean ischaracter(SchObject obj) {
-        return obj.type == SchOType.CHARACTER;
+    public boolean ischaracter() {
+        return type == SchOType.CHARACTER;
     }
 
-    public static boolean isstring(SchObject obj) {
-        return obj.type == SchOType.STRING;
+    public boolean isstring() {
+        return type == SchOType.STRING;
     }
 
     public enum SchOType {
