@@ -78,19 +78,47 @@ public class Repl {
             }
             return new SchOString(sb.toString());
         } else if (c == '(') {
-            Utils.eat_whitespace(in);
-            c = in.read();
-            if (c == ')') {
-                return theEmptyList;
-            } else {
-                Utils.endWithError(1, "Unexpected Character '%c'\nExpecting ')\n", c);
-            }
+            return read_pair();
         } else {
             System.err.printf("Unexpected %c\n", (char)c);
             System.exit(1);
         }
         Utils.endWithError(1, "Read Illegal State!\n");
         return null; // Java is dumb
+    }
+
+    private SchObject read_pair() throws IOException {
+        Utils.eat_whitespace(in);
+
+        int c = in.read();
+        if (c == ')') {
+            return theEmptyList;
+        }
+        in.unread(c);
+
+        SchObject car_obj = read();
+
+        Utils.eat_whitespace(in);
+
+        c = in.read();
+
+        if (c == '.') {
+            c = in.peek();
+            if (!Utils.isdelimiter(c)) {
+                Utils.endWithError(1, "dot not followed by delimiter!");
+            }
+            SchObject cdr_obj = read();
+            Utils.eat_whitespace(in);
+            c = in.read();
+            if (c != ')') {
+                Utils.endWithError(1, "Where is the right paren?");
+            }
+            return new SchOPair(car_obj, cdr_obj);
+        } else {
+            in.unread(c);
+            SchObject cdr_obj = read_pair();
+            return new SchOPair(car_obj, cdr_obj);
+        }
     }
 
     private boolean isfalse(SchObject obj) {
@@ -147,9 +175,27 @@ public class Repl {
             case THEEMPTYLIST:
                 out.printf("()");
                 break;
+            case PAIR:
+                out.print("(");
+                write_pair((SchOPair)obj);
+                out.print(")");
+                break;
             default:
                 Utils.endWithError(1, "cannot write unknown type!\n");
                 break;
+        }
+    }
+
+    private void write_pair(SchOPair pair) {
+        SchObject car_obj = pair.car();
+        SchObject cdr_obj = pair.cdr();
+        write (car_obj);
+        if (cdr_obj.ispair()) {
+            out.print(" ");
+            write_pair((SchOPair)cdr_obj);
+        } else if (!cdr_obj.istheemptylist()) {
+            out.print(" . ");
+            write(cdr_obj);
         }
     }
 

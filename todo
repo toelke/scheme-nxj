@@ -8,8 +8,8 @@ X Integers
 X Booleans
 X Characters
 X Strings
-- Empty List
-- Pairs
+X Empty List
+X Pairs
 - Symbols
 - Quote
 - Environments
