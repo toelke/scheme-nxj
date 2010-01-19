@@ -25,8 +25,12 @@ public class SchObject {
         return type == SchOType.PAIR;
     }
 
+    public boolean issymbol() {
+        return type == SchOType.SYMBOL;
+    }
+
     public enum SchOType {
-        BOOLEAN, CHARACTER, STRING, THEEMPTYLIST, PAIR, FIXNUM
+        BOOLEAN, CHARACTER, STRING, THEEMPTYLIST, PAIR, SYMBOL, FIXNUM
     }
 
     public SchOType type;

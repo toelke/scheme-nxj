@@ -62,6 +62,18 @@ public class Repl {
             } else {
                 Utils.endWithError(1,"number not followed by delimiter!\n");
             }
+        } else if (Utils.isinitial(c) || (c == '+' || c == '-') && Utils.isdelimiter(in.peek())) {
+            StringBuilder sb = new StringBuilder();
+            while (Utils.isinitial(c) || Utils.isdigit(c) || c == '+' || c == '-') {
+                sb.append((char)c);
+                c = in.read();
+            }
+            if (Utils.isdelimiter(c)) {
+                in.unread(c);
+                return SchOSymbol.makeSymbol(sb.toString());
+            } else {
+                Utils.endWithError(1, "Symbol does not end with delimiter. Found '" + (char)c + "'\n");
+            }
         } else if (c == '"') {
             StringBuilder sb = new StringBuilder();
             while ((c = in.read()) != '"') {
@@ -151,6 +163,9 @@ public class Repl {
                         out.printf("%c", c);
                         break;
                 }
+                break;
+            case SYMBOL:
+                out.print(((SchOSymbol)obj).value);
                 break;
             case STRING:
                 out.printf("\"");
