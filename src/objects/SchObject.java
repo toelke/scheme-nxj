@@ -29,6 +29,18 @@ public class SchObject {
         return type == SchOType.SYMBOL;
     }
 
+    public boolean is_self_evaluating() {
+        return isboolean() || isfixnum() || ischaracter() || isstring();
+    }
+
+    public boolean is_tagged_list(SchObject tag) {
+        if (ispair()) {
+            @SuppressWarnings({"ClassReferencesSubclass"}) SchObject the_car = ((SchOPair)this).car();
+            return the_car.issymbol() && the_car == tag;
+        }
+        return false;
+    }
+
     public enum SchOType {
         BOOLEAN, CHARACTER, STRING, THEEMPTYLIST, PAIR, SYMBOL, FIXNUM
     }

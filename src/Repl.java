@@ -12,16 +12,23 @@ public class Repl {
     PrintStream out;
     SchObject sfalse;
     SchObject strue;
-    SchObject theEmptyList;
+    SchObject quote_symbol;
 
+    SchObject theEmptyList;
 
     public Repl (InputStream i, OutputStream o) {
         in = new MyInputStream(i);
         out = new PrintStream(o);
 
+        quote_symbol = SchOSymbol.makeSymbol("quote");
+
         sfalse = new SchOBoolean(false);
         strue = new SchOBoolean(true);
         theEmptyList = new SchOTheEmptyList();
+    }
+
+    private SchObject cons(SchObject a, SchObject b) {
+        return new SchOPair(a, b);
     }
 
     public SchObject read() throws IOException {
@@ -44,6 +51,8 @@ public class Repl {
                     System.err.printf("unknown boolean or character literal\n");
                     System.exit(1);
             }
+        } else if (c == '\'') {
+            return cons(quote_symbol, cons(read(), theEmptyList));
         } else if (Utils.isdigit(c) || c == '-' && Utils.isdigit(in.peek())) {
             short sign = 1;
             long num = 0;
@@ -99,6 +108,14 @@ public class Repl {
         return null; // Java is dumb
     }
 
+    private boolean isquoted(SchObject exp) {
+        return exp.is_tagged_list(quote_symbol);
+    }
+
+    private SchObject text_of_quotation(SchObject exp) {
+        return ((SchOPair)((SchOPair) exp).cdr()).car();
+    }
+
     private SchObject read_pair() throws IOException {
         Utils.eat_whitespace(in);
 
@@ -138,7 +155,14 @@ public class Repl {
     }
 
     public SchObject eval(SchObject exp) {
-        return exp;
+        if (exp.is_self_evaluating()) {
+            return exp;
+        } else if (isquoted(exp)) {
+            return text_of_quotation(exp);
+        } else {
+            Utils.endWithError(1, "cannot eval unknown expression type\n");
+        }
+        return null;
     }
 
     public void write(SchObject obj) {
