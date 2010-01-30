@@ -1,6 +1,12 @@
 package objects;
 
+@SuppressWarnings({"ClassReferencesSubclass"})
 public class SchObject {
+    public static SchObject sfalse = new SchOBoolean(false);
+    public static SchObject strue = new SchOBoolean(true);
+    public static SchObject quote_symbol = SchOSymbol.makeSymbol("quote");
+    public static SchObject theEmptyList = new SchOTheEmptyList();
+
     public boolean isfixnum() {
         return type == SchOType.FIXNUM;
     }
@@ -33,12 +39,32 @@ public class SchObject {
         return isboolean() || isfixnum() || ischaracter() || isstring();
     }
 
+    public boolean isvariable() {
+        return issymbol();
+    }
+
     public boolean is_tagged_list(SchObject tag) {
         if (ispair()) {
-            @SuppressWarnings({"ClassReferencesSubclass"}) SchObject the_car = ((SchOPair)this).car();
+            SchObject the_car = ((SchOPair)this).car();
             return the_car.issymbol() && the_car == tag;
         }
         return false;
+    }
+
+    public boolean isfalse() {
+        return this == SchObject.sfalse;
+    }
+
+    public boolean isquoted() {
+        return is_tagged_list(SchObject.quote_symbol);
+    }
+
+    public SchObject caddr() {
+        return ((SchOPair)((SchOPair)((SchOPair) this).cdr()).cdr()).car();
+    }
+
+    public SchObject cadr() {
+        return ((SchOPair)((SchOPair) this).cdr()).car();
     }
 
     public enum SchOType {

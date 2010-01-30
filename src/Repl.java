@@ -10,21 +10,12 @@ import java.io.PrintStream;
 public class Repl {
     MyInputStream in;
     PrintStream out;
-    SchObject sfalse;
-    SchObject strue;
-    SchObject quote_symbol;
 
-    SchObject theEmptyList;
 
     public Repl (InputStream i, OutputStream o) {
         in = new MyInputStream(i);
         out = new PrintStream(o);
 
-        quote_symbol = SchOSymbol.makeSymbol("quote");
-
-        sfalse = new SchOBoolean(false);
-        strue = new SchOBoolean(true);
-        theEmptyList = new SchOTheEmptyList();
     }
 
     private SchObject cons(SchObject a, SchObject b) {
@@ -42,9 +33,9 @@ public class Repl {
             c = in.read();
             switch(c) {
                 case 't':
-                    return strue;
+                    return SchObject.strue;
                 case 'f':
-                    return sfalse;
+                    return SchObject.sfalse;
                 case '\\':
                     return SchOCharacter.readCharacter(in);
                 default:
@@ -52,7 +43,7 @@ public class Repl {
                     System.exit(1);
             }
         } else if (c == '\'') {
-            return cons(quote_symbol, cons(read(), theEmptyList));
+            return cons(SchObject.quote_symbol, cons(read(), SchObject.theEmptyList));
         } else if (Utils.isdigit(c) || c == '-' && Utils.isdigit(in.peek())) {
             short sign = 1;
             long num = 0;
@@ -108,20 +99,17 @@ public class Repl {
         return null; // Java is dumb
     }
 
-    private boolean isquoted(SchObject exp) {
-        return exp.is_tagged_list(quote_symbol);
+    private SchObject text_of_quotation(SchObject exp) {
+        return exp.cadr();
     }
 
-    private SchObject text_of_quotation(SchObject exp) {
-        return ((SchOPair)((SchOPair) exp).cdr()).car();
-    }
 
     private SchObject read_pair() throws IOException {
         Utils.eat_whitespace(in);
 
         int c = in.read();
         if (c == ')') {
-            return theEmptyList;
+            return SchObject.theEmptyList;
         }
         in.unread(c);
 
@@ -150,14 +138,12 @@ public class Repl {
         }
     }
 
-    private boolean isfalse(SchObject obj) {
-        return obj == sfalse;
     }
 
     public SchObject eval(SchObject exp) {
         if (exp.is_self_evaluating()) {
             return exp;
-        } else if (isquoted(exp)) {
+        } else if (exp.isquoted()) {
             return text_of_quotation(exp);
         } else {
             Utils.endWithError(1, "cannot eval unknown expression type\n");
@@ -171,7 +157,7 @@ public class Repl {
                 out.printf("%d", ((SchOFixNum)obj).value);
                 break;
             case BOOLEAN:
-                out.printf("#%c", isfalse(obj) ? 'f':'t');
+                out.printf("#%c", obj.isfalse() ? 'f':'t');
                 break;
             case CHARACTER:
                 out.printf("#\\");
