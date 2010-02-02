@@ -20,10 +20,6 @@ public class Repl {
         the_global_environment = setup_environment();
     }
 
-    private SchObject cons(SchObject a, SchObject b) {
-        return new SchOPair(a, b);
-    }
-
     public SchObject read() throws IOException {
         int c;
 
@@ -45,7 +41,7 @@ public class Repl {
                     System.exit(1);
             }
         } else if (c == '\'') {
-            return cons(SchObject.quote_symbol, cons(read(), SchObject.theEmptyList));
+            return SchObject.quote_symbol.cons(read().cons(SchObject.theEmptyList));
         } else if (Utils.isdigit(c) || c == '-' && Utils.isdigit(in.peek())) {
             short sign = 1;
             long num = 0;
@@ -101,44 +97,20 @@ public class Repl {
         return null; // Java is dumb
     }
 
-    private SchObject text_of_quotation(SchObject exp) {
-        return exp.cadr();
-    }
-
-    private SchObject enclosing_environment(SchObject exp) {
-        return ((SchOPair)exp).cdr();
-    }
-
-    private SchObject first_frame(SchObject exp) {
-        return ((SchOPair)exp).car();
-    }
-
-    private SchObject make_frame(SchObject var, SchObject val) {
-        return cons(var, val);
-    }
-
-    private SchObject frame_variables(SchObject frame) {
-        return ((SchOPair)frame).car();
-    }
-
-    private SchObject frame_values(SchObject frame) {
-        return ((SchOPair)frame).cdr();
-    }
-
     private void add_binding_to_frame(SchObject var, SchObject val, SchObject frame) {
-        ((SchOPair)frame).set_car(cons(var, ((SchOPair)frame).car()));
-        ((SchOPair)frame).set_cdr(cons(val, ((SchOPair)frame).cdr()));
+        ((SchOPair)frame).set_car(var.cons(((SchOPair)frame).car()));
+        ((SchOPair)frame).set_cdr(val.cons(((SchOPair)frame).cdr()));
     }
 
     private SchObject extend_environment(SchObject vars, SchObject vals, SchObject base) {
-        return cons(make_frame(vars, vals), base);
+        return vars.make_frame(vals).cons(base);
     }
 
     private SchObject lookup_variable_value(SchObject var, SchObject env) {
         while (!env.istheemptylist()) {
-            SchObject frame = first_frame(env);
-            SchObject vars = frame_variables(frame);
-            SchObject vals = frame_values(frame);
+            SchObject frame = env.first_frame();
+            SchObject vars = frame.frame_variables();
+            SchObject vals = frame.frame_values();
             while(!vars.istheemptylist()) {
                 if (var == ((SchOPair)vars).car())
                     return ((SchOPair)vals).car();
@@ -146,7 +118,7 @@ public class Repl {
                 vals = ((SchOPair)vals).cdr();
             }
             //noinspection AssignmentToMethodParameter
-            env = enclosing_environment(env);
+            env = env.enclosing_environment();
         }
         Utils.endWithError(1, "Unbound variable '" + ((SchOSymbol)var).value + "'\n");
         return null;
@@ -154,9 +126,9 @@ public class Repl {
 
     private void set_variable_value(SchObject var, SchObject val, SchObject env) {
         while (!env.istheemptylist()) {
-            SchObject frame = first_frame(env);
-            SchObject vars = frame_variables(frame);
-            SchObject vals = frame_values(frame);
+            SchObject frame = env.first_frame();
+            SchObject vars = frame.frame_variables();
+            SchObject vals = frame.frame_values();
             while(!vars.istheemptylist()) {
                 if (var == ((SchOPair)vars).car()) {
                     ((SchOPair)vals).set_car(val);
@@ -166,15 +138,15 @@ public class Repl {
                 vals = ((SchOPair)vals).cdr();
             }
             //noinspection AssignmentToMethodParameter
-            env = enclosing_environment(env);
+            env = env.enclosing_environment();
         }
         Utils.endWithError(1, "Unbound variable '" + ((SchOSymbol)var).value + "'\n");
     }
 
     private void define_variable(SchObject var, SchObject val, SchObject env) {
-        SchObject frame = first_frame(env);
-        SchObject vars = frame_variables(frame);
-        SchObject vals = frame_values(frame);
+        SchObject frame = env.first_frame();
+        SchObject vars = frame.frame_variables();
+        SchObject vals = frame.frame_values();
 
         while (!vars.istheemptylist()) {
             if (var == ((SchOPair)vars).car()) {
@@ -189,22 +161,6 @@ public class Repl {
 
     private SchObject setup_environment() {
         return extend_environment(SchObject.theEmptyList, SchObject.theEmptyList, SchObject.the_empty_environment);
-    }
-
-    private SchObject assignment_variable (SchObject exp) {
-        return exp.cadr();
-    }
-
-    private SchObject assignment_value(SchObject exp) {
-        return exp.caddr();
-    }
-
-    private SchObject definition_variable(SchObject exp) {
-        return exp.cadr();
-    }
-
-    private SchObject definition_value(SchObject exp) {
-        return exp.caddr();
     }
 
     private SchObject read_pair() throws IOException {
@@ -242,12 +198,12 @@ public class Repl {
     }
 
     private SchObject eval_assignment(SchObject exp, SchObject env) {
-        set_variable_value(assignment_variable(exp), eval(assignment_value(exp), env), env);
+        set_variable_value(exp.assignment_variable(), eval(exp.assignment_value(), env), env);
         return SchObject.ok_symbol;
     }
 
     private SchObject eval_definition(SchObject exp, SchObject env) {
-        define_variable(definition_variable(exp), eval(definition_value(exp), env), env);
+        define_variable(exp.definition_variable(), eval(exp.definition_value(), env), env);
         return SchObject.ok_symbol;
     }
 
@@ -255,7 +211,7 @@ public class Repl {
         if (exp.is_self_evaluating()) {
             return exp;
         } else if (exp.isquoted()) {
-            return text_of_quotation(exp);
+            return exp.text_of_quotation();
         } else if (exp.isvariable()) {
             return lookup_variable_value(exp, env);
         } else if (exp.is_assignment()) {

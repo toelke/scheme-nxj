@@ -79,6 +79,58 @@ public class SchObject {
         return ((SchOPair)((SchOPair) this).cdr()).car();
     }
 
+    public SchObject cdddr() {
+        return ((SchOPair)((SchOPair)((SchOPair) this).cdr()).cdr()).cdr();
+    }
+
+    public SchObject cadddr() {
+        return ((SchOPair) ((SchOPair) ((SchOPair) ((SchOPair) this).cdr()).cdr()).cdr()).car();
+    }
+
+    public SchObject definition_value() {
+        return caddr();
+    }
+
+    public SchObject definition_variable() {
+        return cadr();
+    }
+
+    public SchObject assignment_value() {
+        return caddr();
+    }
+
+    public SchObject assignment_variable() {
+        return cadr();
+    }
+
+    public SchObject text_of_quotation() {
+        return cadr();
+    }
+
+    public SchObject enclosing_environment() {
+        return ((SchOPair) this).cdr();
+    }
+
+    public SchObject first_frame() {
+        return ((SchOPair) this).car();
+    }
+
+    public SchObject make_frame(SchObject val) {
+        return cons(val);
+    }
+
+    public SchObject frame_variables() {
+        return ((SchOPair) this).car();
+    }
+
+    public SchObject frame_values() {
+        return ((SchOPair) this).cdr();
+    }
+
+    public SchObject cons(SchObject b) {
+        return new SchOPair(this, b);
+    }
+
     public enum SchOType {
         BOOLEAN, CHARACTER, STRING, THEEMPTYLIST, PAIR, SYMBOL, FIXNUM
     }
