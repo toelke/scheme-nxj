@@ -10,6 +10,7 @@ public class SchObject {
     public static SchObject ok_symbol = SchOSymbol.makeSymbol("ok");
     public static SchObject theEmptyList = new SchOTheEmptyList();
     public static SchObject the_empty_environment = SchObject.theEmptyList;
+    public static SchObject if_symbol = SchOSymbol.makeSymbol("if");
 
     public boolean isfixnum() {
         return type == SchOType.FIXNUM;
@@ -65,6 +66,10 @@ public class SchObject {
 
     public boolean is_definition() {
         return is_tagged_list(SchObject.define_symbol);
+    }
+
+    public boolean is_if() {
+        return is_tagged_list(SchObject.if_symbol);
     }
 
     public boolean isquoted() {
@@ -129,6 +134,26 @@ public class SchObject {
 
     public SchObject cons(SchObject b) {
         return new SchOPair(this, b);
+    }
+
+    public boolean istrue() {
+        return !isfalse();
+    }
+
+    public SchObject if_alternative() {
+        if (cdddr().istheemptylist()) {
+            return sfalse;
+        } else {
+            return cadddr();
+        }
+    }
+
+    public SchObject if_consequent() {
+        return caddr();
+    }
+
+    public SchObject if_predicate() {
+        return cadr();
     }
 
     public enum SchOType {

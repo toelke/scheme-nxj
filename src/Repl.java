@@ -208,6 +208,7 @@ public class Repl {
     }
 
     public SchObject eval(SchObject exp, SchObject env) {
+        for(;;)
         if (exp.is_self_evaluating()) {
             return exp;
         } else if (exp.isquoted()) {
@@ -218,10 +219,12 @@ public class Repl {
             return eval_assignment(exp, env);
         } else if (exp.is_definition()) {
             return eval_definition(exp, env);
+        } else if (exp.is_if()) {
+            //noinspection AssignmentToMethodParameter
+            exp = eval(exp.if_predicate(), env).istrue() ? exp.if_consequent() : exp.if_alternative();
         } else {
             Utils.endWithError(1, "cannot eval unknown expression type\n");
         }
-        return null;
     }
 
     public void write(SchObject obj) {
