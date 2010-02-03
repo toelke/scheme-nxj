@@ -146,7 +146,7 @@ public class SchObject {
     }
 
     public SchObject definition_value() {
-        if (caddr().issymbol()) return caddr();
+        if (cadr().issymbol()) return caddr();
         else return make_lambda(cdadr(), cddr());
     }
 
