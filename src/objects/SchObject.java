@@ -11,6 +11,7 @@ public class SchObject {
     public static SchObject theEmptyList = new SchOTheEmptyList();
     public static SchObject the_empty_environment = SchObject.theEmptyList;
     public static SchObject if_symbol = SchOSymbol.makeSymbol("if");
+    public static SchObject lambda_symbol = SchOSymbol.makeSymbol("lambda");
 
     public boolean isfixnum() {
         return type == SchOType.FIXNUM;
@@ -42,6 +43,10 @@ public class SchObject {
 
     public boolean isprimproc() {
         return type == SchOType.PRIMITIVE_PROC;
+    }
+
+    public boolean iscompproc() {
+        return type == SchOType.COMPOUND_PROC;
     }
 
     public boolean is_self_evaluating() {
@@ -80,12 +85,40 @@ public class SchObject {
         return is_tagged_list(SchObject.quote_symbol);
     }
 
+    public boolean islambda() {
+        return is_tagged_list(SchObject.lambda_symbol);
+    }
+
+    public SchObject lambda_parameters() {
+        return cadr();
+    }
+
+    public SchObject lambda_body() {
+        return cddr();
+    }
+
+    public boolean is_last_exp() {
+        return ((SchOPair)this).cdr().istheemptylist();
+    }
+
+    public SchObject first_exp() {
+        return ((SchOPair)this).car();
+    }
+
+    public SchObject rest_exp() {
+        return ((SchOPair)this).cdr();
+    }
+
     public SchObject caddr() {
         return ((SchOPair)((SchOPair)((SchOPair) this).cdr()).cdr()).car();
     }
 
     public SchObject caar() {
         return ((SchOPair)((SchOPair) this).car()).car();
+    }
+
+    public SchObject cddr() {
+        return ((SchOPair)((SchOPair) this).cdr()).cdr();
     }
 
     public SchObject cdar() {
@@ -100,20 +133,34 @@ public class SchObject {
         return ((SchOPair)((SchOPair)((SchOPair) this).cdr()).cdr()).cdr();
     }
 
+    public SchObject cdadr() {
+        return ((SchOPair)((SchOPair)((SchOPair) this).cdr()).car()).cdr();
+    }
+
+    public SchObject caadr() {
+        return ((SchOPair)((SchOPair)((SchOPair) this).cdr()).car()).car();
+    }
+
     public SchObject cadddr() {
         return ((SchOPair) ((SchOPair) ((SchOPair) ((SchOPair) this).cdr()).cdr()).cdr()).car();
     }
 
     public SchObject definition_value() {
-        return caddr();
+        if (caddr().issymbol()) return caddr();
+        else return make_lambda(cdadr(), cddr());
     }
 
     public SchObject definition_variable() {
-        return cadr();
+        if (cadr().issymbol()) return cadr();
+        else return caadr();
     }
 
     public SchObject assignment_value() {
         return caddr();
+    }
+
+    private SchObject make_lambda(SchObject parameters, SchObject body) {
+        return SchObject.lambda_symbol.cons(parameters.cons(body));
     }
 
     public SchObject assignment_variable() {
@@ -193,7 +240,7 @@ public class SchObject {
     }
 
     public enum SchOType {
-        BOOLEAN, CHARACTER, STRING, THEEMPTYLIST, PAIR, SYMBOL, PRIMITIVE_PROC, FIXNUM
+        BOOLEAN, CHARACTER, STRING, THEEMPTYLIST, PAIR, SYMBOL, PRIMITIVE_PROC, COMPOUND_PROC, FIXNUM
     }
 
     public SchOType type;

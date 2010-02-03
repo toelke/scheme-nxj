@@ -242,6 +242,7 @@ public class Repl {
         return SchObject.ok_symbol;
     }
 
+    @SuppressWarnings({"AssignmentToMethodParameter"})
     public SchObject eval(SchObject exp, SchObject env) {
         for(;;)
         if (exp.is_self_evaluating()) {
@@ -255,12 +256,25 @@ public class Repl {
         } else if (exp.is_definition()) {
             return eval_definition(exp, env);
         } else if (exp.is_if()) {
-            //noinspection AssignmentToMethodParameter
             exp = eval(exp.if_predicate(), env).istrue() ? exp.if_consequent() : exp.if_alternative();
+        } else if (exp.islambda()) {
+            return new SchOCompoundProc(exp.lambda_parameters(), exp.lambda_body(), env);
         } else if (exp.is_application()) {
-            SchOPrimProc proc = (SchOPrimProc)eval(exp.operator(), env);
+            SchObject proc = eval(exp.operator(), env);
             SchObject args = list_of_values(exp.operands(), env);
-            return proc.fn(args);
+            if (proc.isprimproc()) return ((SchOPrimProc)proc).fn(args);
+            else if (proc.iscompproc()) {
+                SchOCompoundProc cproc = (SchOCompoundProc) proc;
+                env = extend_environment(cproc.parameters, args, cproc.env);
+                exp = cproc.body;
+                while (!exp.is_last_exp()) {
+                    eval(exp.first_exp(), env);
+                    exp = exp.rest_exp();
+                }
+                exp = exp.first_exp();
+            } else {
+                Utils.endWithError(1, "unknown procedure type\n");
+            }
         } else {
             Utils.endWithError(1, "cannot eval unknown expression type\n");
         }
@@ -321,6 +335,7 @@ public class Repl {
                 out.print(")");
                 break;
             case PRIMITIVE_PROC:
+            case COMPOUND_PROC:
                 out.print("#<procedure>\n");
                 break;
             default:
