@@ -12,6 +12,7 @@ public class SchObject {
     public static SchObject the_empty_environment = SchObject.theEmptyList;
     public static SchObject if_symbol = SchOSymbol.makeSymbol("if");
     public static SchObject lambda_symbol = SchOSymbol.makeSymbol("lambda");
+    public static SchObject begin_symbol = SchOSymbol.makeSymbol("begin");
 
     public boolean isfixnum() {
         return type == SchOType.FIXNUM;
@@ -89,12 +90,20 @@ public class SchObject {
         return is_tagged_list(SchObject.lambda_symbol);
     }
 
+    public boolean isbegin() {
+        return is_tagged_list(SchObject.begin_symbol);
+    }
+
     public SchObject lambda_parameters() {
         return cadr();
     }
 
     public SchObject lambda_body() {
         return cddr();
+    }
+
+    public SchObject begin_actions() {
+        return ((SchOPair)this).cdr();
     }
 
     public boolean is_last_exp() {
@@ -161,6 +170,10 @@ public class SchObject {
 
     private SchObject make_lambda(SchObject parameters, SchObject body) {
         return SchObject.lambda_symbol.cons(parameters.cons(body));
+    }
+
+    public SchObject make_begin() {
+        return SchObject.begin_symbol.cons(this);
     }
 
     public SchObject assignment_variable() {

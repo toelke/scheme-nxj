@@ -259,6 +259,13 @@ public class Repl {
             exp = eval(exp.if_predicate(), env).istrue() ? exp.if_consequent() : exp.if_alternative();
         } else if (exp.islambda()) {
             return new SchOCompoundProc(exp.lambda_parameters(), exp.lambda_body(), env);
+        } else if (exp.isbegin()) {
+            exp = exp.begin_actions();
+            while (!exp.is_last_exp()) {
+                eval(exp.first_exp(), env);
+                exp = exp.rest_exp();
+            }
+            exp = exp.first_exp();
         } else if (exp.is_application()) {
             SchObject proc = eval(exp.operator(), env);
             SchObject args = list_of_values(exp.operands(), env);
@@ -266,12 +273,7 @@ public class Repl {
             else if (proc.iscompproc()) {
                 SchOCompoundProc cproc = (SchOCompoundProc) proc;
                 env = extend_environment(cproc.parameters, args, cproc.env);
-                exp = cproc.body;
-                while (!exp.is_last_exp()) {
-                    eval(exp.first_exp(), env);
-                    exp = exp.rest_exp();
-                }
-                exp = exp.first_exp();
+                exp = cproc.body.make_begin();
             } else {
                 Utils.endWithError(1, "unknown procedure type\n");
             }
