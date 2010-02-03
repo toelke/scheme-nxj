@@ -20,7 +20,39 @@ public class Repl {
 
         the_global_environment = setup_environment();
 
+        define_variable(SchOSymbol.makeSymbol("null?"), new SchOPPNull(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol("boolean?"), new SchOPPBoolean(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol("string?"), new SchOPPString(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol("character?"), new SchOPPChar(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol("integer?"), new SchOPPInteger(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol("symbol?"), new SchOPPSymbol(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol("pair?"), new SchOPPPair(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol("procedure?"), new SchOPPProcedure(), the_global_environment);
+
+        define_variable(SchOSymbol.makeSymbol("int->char"), new SchOPPIntegerToChar(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol("char->int"), new SchOPPCharToInteger(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol("symbol->string"), new SchOPPSymbolToString(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol("string->symbol"), new SchOPPStringToSymbol(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol("string->number"), new SchOPPStringToNumber(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol("number->string"), new SchOPPNumberToString(), the_global_environment);
+
         define_variable(SchOSymbol.makeSymbol("+"), new SchOPPPlus(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol("-"), new SchOPPSub(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol("*"), new SchOPPMul(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol("/"), new SchOPPQuot(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol("%"), new SchOPPRem(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol("="), new SchOPPNumberEqual(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol(">"), new SchOPPGreaterThan(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol("<"), new SchOPPLessThan(), the_global_environment);
+
+        define_variable(SchOSymbol.makeSymbol("cons"), new SchOPPCons(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol("car"), new SchOPPCar(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol("cdr"), new SchOPPCdr(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol("set-car!"), new SchOPPSetCar(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol("set-cdr!"), new SchOPPSetCdr(), the_global_environment);
+        define_variable(SchOSymbol.makeSymbol("list"), new SchOPPList(), the_global_environment);
+
+        define_variable(SchOSymbol.makeSymbol("eq?"), new SchOPPEq(), the_global_environment);
     }
 
     public SchObject read() throws IOException {

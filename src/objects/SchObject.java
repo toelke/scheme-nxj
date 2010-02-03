@@ -84,6 +84,14 @@ public class SchObject {
         return ((SchOPair)((SchOPair)((SchOPair) this).cdr()).cdr()).car();
     }
 
+    public SchObject caar() {
+        return ((SchOPair)((SchOPair) this).car()).car();
+    }
+
+    public SchObject cdar() {
+        return ((SchOPair)((SchOPair) this).car()).cdr();
+    }
+
     public SchObject cadr() {
         return ((SchOPair)((SchOPair) this).cdr()).car();
     }
