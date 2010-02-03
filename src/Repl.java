@@ -1,4 +1,5 @@
 import objects.*;
+import objects.primproc.*;
 import utils.MyInputStream;
 import utils.Utils;
 
@@ -18,6 +19,8 @@ public class Repl {
         out = new PrintStream(o);
 
         the_global_environment = setup_environment();
+
+        define_variable(SchOSymbol.makeSymbol("+"), new SchOPPPlus(), the_global_environment);
     }
 
     public SchObject read() throws IOException {
@@ -222,6 +225,10 @@ public class Repl {
         } else if (exp.is_if()) {
             //noinspection AssignmentToMethodParameter
             exp = eval(exp.if_predicate(), env).istrue() ? exp.if_consequent() : exp.if_alternative();
+        } else if (exp.is_application()) {
+            SchOPrimProc proc = (SchOPrimProc)eval(exp.operator(), env);
+            SchObject args = list_of_values(exp.operands(), env);
+            return proc.fn(args);
         } else {
             Utils.endWithError(1, "cannot eval unknown expression type\n");
         }
@@ -281,6 +288,9 @@ public class Repl {
                 write_pair((SchOPair)obj);
                 out.print(")");
                 break;
+            case PRIMITIVE_PROC:
+                out.print("#<procedure>\n");
+                break;
             default:
                 Utils.endWithError(1, "cannot write unknown type!\n");
                 break;
@@ -298,6 +308,11 @@ public class Repl {
             out.print(" . ");
             write(cdr_obj);
         }
+    }
+
+    public SchObject list_of_values(SchObject exp, SchObject env) {
+        if (exp.is_no_operands()) return SchObject.theEmptyList;
+        else return eval(exp.first_operand(), env).cons(list_of_values(exp.rest_operands(), env));
     }
 
     public static void main(String... args) {

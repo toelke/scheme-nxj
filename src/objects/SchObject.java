@@ -40,6 +40,10 @@ public class SchObject {
         return type == SchOType.SYMBOL;
     }
 
+    public boolean isprimproc() {
+        return type == SchOType.PRIMITIVE_PROC;
+    }
+
     public boolean is_self_evaluating() {
         return isboolean() || isfixnum() || ischaracter() || isstring();
     }
@@ -156,8 +160,32 @@ public class SchObject {
         return cadr();
     }
 
+    public boolean is_application() {
+        return ispair();
+    }
+
+    public SchObject operator() {
+        return ((SchOPair)this).car();
+    }
+
+    public SchObject operands() {
+        return ((SchOPair)this).cdr();
+    }
+
+    public boolean is_no_operands() {
+        return istheemptylist();
+    }
+
+    public SchObject first_operand() {
+        return ((SchOPair)this).car();
+    }
+
+    public SchObject rest_operands() {
+        return ((SchOPair)this).cdr();
+    }
+
     public enum SchOType {
-        BOOLEAN, CHARACTER, STRING, THEEMPTYLIST, PAIR, SYMBOL, FIXNUM
+        BOOLEAN, CHARACTER, STRING, THEEMPTYLIST, PAIR, SYMBOL, PRIMITIVE_PROC, FIXNUM
     }
 
     public SchOType type;

@@ -1,7 +1,7 @@
 package objects;
 
 public class SchOPair extends SchObject {
-    SchObject car, cdr;
+    public SchObject car, cdr;
 
     public SchOPair(SchObject a, SchObject d) {
         car = a;
