@@ -13,6 +13,7 @@ public class SchObject {
     public static SchObject if_symbol = SchOSymbol.makeSymbol("if");
     public static SchObject lambda_symbol = SchOSymbol.makeSymbol("lambda");
     public static SchObject begin_symbol = SchOSymbol.makeSymbol("begin");
+    public static SchObject cond_symbol = SchOSymbol.makeSymbol("cond");
 
     public boolean isfixnum() {
         return type == SchOType.FIXNUM;
@@ -82,6 +83,10 @@ public class SchObject {
         return is_tagged_list(SchObject.if_symbol);
     }
 
+    public boolean is_cond() {
+        return is_tagged_list(SchObject.cond_symbol);
+    }
+
     public boolean isquoted() {
         return is_tagged_list(SchObject.quote_symbol);
     }
@@ -118,6 +123,14 @@ public class SchObject {
         return ((SchOPair)this).cdr();
     }
 
+    public SchObject car() {
+        return ((SchOPair) this).car();
+    }
+
+    public SchObject cdr() {
+        return ((SchOPair) this).car();
+    }
+
     public SchObject caddr() {
         return ((SchOPair)((SchOPair)((SchOPair) this).cdr()).cdr()).car();
     }
@@ -152,6 +165,10 @@ public class SchObject {
 
     public SchObject cadddr() {
         return ((SchOPair) ((SchOPair) ((SchOPair) ((SchOPair) this).cdr()).cdr()).cdr()).car();
+    }
+
+    public SchObject cadadr() {
+        return ((SchOPair) ((SchOPair) ((SchOPair) ((SchOPair) this).cdr()).car()).cdr()).car();
     }
 
     public SchObject definition_value() {
@@ -226,6 +243,20 @@ public class SchObject {
 
     public SchObject if_predicate() {
         return cadr();
+    }
+
+    public SchObject cond_predicate() {
+        if (cdr().istheemptylist()) return SchObject.strue;
+        return caadr();
+    }
+
+    public SchObject cond_consequent() {
+        if (cdr().istheemptylist()) return SchObject.quote_symbol.cons(SchObject.theEmptyList.cons(SchObject.theEmptyList));
+        return cadadr();
+    }
+
+    public SchObject cond_rest() {
+        return SchObject.cond_symbol.cons(cddr());
     }
 
     public boolean is_application() {

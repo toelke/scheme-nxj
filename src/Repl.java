@@ -257,6 +257,8 @@ public class Repl {
             return eval_definition(exp, env);
         } else if (exp.is_if()) {
             exp = eval(exp.if_predicate(), env).istrue() ? exp.if_consequent() : exp.if_alternative();
+        } else if (exp.is_cond()) {
+            exp = eval(exp.cond_predicate(), env).istrue() ? exp.cond_consequent() : exp.cond_rest();
         } else if (exp.islambda()) {
             return new SchOCompoundProc(exp.lambda_parameters(), exp.lambda_body(), env);
         } else if (exp.isbegin()) {
