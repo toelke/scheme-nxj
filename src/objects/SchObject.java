@@ -14,6 +14,7 @@ public class SchObject {
     public static SchObject lambda_symbol = SchOSymbol.makeSymbol("lambda");
     public static SchObject begin_symbol = SchOSymbol.makeSymbol("begin");
     public static SchObject cond_symbol = SchOSymbol.makeSymbol("cond");
+    public static SchObject let_symbol = SchOSymbol.makeSymbol("let");
 
     public boolean isfixnum() {
         return type == SchOType.FIXNUM;
@@ -85,6 +86,10 @@ public class SchObject {
 
     public boolean is_cond() {
         return is_tagged_list(SchObject.cond_symbol);
+    }
+
+    public boolean is_let() {
+        return is_tagged_list(SchObject.let_symbol);
     }
 
     public boolean isquoted() {
@@ -281,6 +286,46 @@ public class SchObject {
 
     public SchObject rest_operands() {
         return ((SchOPair)this).cdr();
+    }
+
+    public SchObject let_to_application() {
+        return make_application(make_lambda(let_parameters(), let_body()), let_arguments());
+    }
+
+    private SchObject let_arguments() {
+        return let_bindings().bindings_arguments();
+    }
+
+    private SchObject bindings_arguments() {
+        return istheemptylist() ? SchObject.theEmptyList : car().binding_argument().cons(cdr().bindings_arguments());
+    }
+
+    private SchObject binding_argument() {
+        return cadr();
+    }
+
+    private SchObject let_parameters() {
+        return let_bindings().bindings_parameters();
+    }
+
+    private SchObject bindings_parameters() {
+        return istheemptylist() ? SchObject.theEmptyList : car().binding_parameter().cons(cdr().bindings_parameters());
+    }
+
+    private SchObject binding_parameter() {
+        return car();
+    }
+
+    private SchObject let_bindings() {
+        return cadr();
+    }
+
+    private SchObject let_body() {
+        return cddr();
+    }
+
+    private SchObject make_application(SchObject operator, SchObject operands) {
+        return operator.cons(operands);
     }
 
     public enum SchOType {
