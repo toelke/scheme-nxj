@@ -2,7 +2,7 @@ package utils;
 
 import java.io.IOException;
 
-@SuppressWarnings({"UtilityClass", "UtilityClassWithoutPrivateConstructor"})
+@SuppressWarnings({"UtilityClass", "UtilityClassWithoutPrivateConstructor", "StaticMethodOnlyUsedInOneClass"})
 public class Utils {
     public static boolean isdigit(int c) {
         return Character.isDigit(c);

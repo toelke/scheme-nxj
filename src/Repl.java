@@ -8,11 +8,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+@SuppressWarnings({"OverlyComplexClass"})
 public class Repl {
-    MyInputStream in;
-    PrintStream out;
+    private MyInputStream in;
+    private PrintStream out;
 
-    SchObject the_global_environment;
+    private SchObject the_global_environment;
 
     public Repl (InputStream i, OutputStream o) {
         in = new MyInputStream(i);
@@ -133,8 +134,8 @@ public class Repl {
     }
 
     private void add_binding_to_frame(SchObject var, SchObject val, SchObject frame) {
-        ((SchOPair)frame).set_car(var.cons(((SchOPair)frame).car()));
-        ((SchOPair)frame).set_cdr(val.cons(((SchOPair)frame).cdr()));
+        ((SchOPair)frame).set_car(var.cons(frame.car()));
+        ((SchOPair)frame).set_cdr(val.cons(frame.cdr()));
     }
 
     private SchObject extend_environment(SchObject vars, SchObject vals, SchObject base) {
@@ -147,10 +148,10 @@ public class Repl {
             SchObject vars = frame.frame_variables();
             SchObject vals = frame.frame_values();
             while(!vars.istheemptylist()) {
-                if (var == ((SchOPair)vars).car())
-                    return ((SchOPair)vals).car();
-                vars = ((SchOPair)vars).cdr();
-                vals = ((SchOPair)vals).cdr();
+                if (var == vars.car())
+                    return vals.car();
+                vars = vars.cdr();
+                vals = vals.cdr();
             }
             //noinspection AssignmentToMethodParameter
             env = env.enclosing_environment();
@@ -165,12 +166,12 @@ public class Repl {
             SchObject vars = frame.frame_variables();
             SchObject vals = frame.frame_values();
             while(!vars.istheemptylist()) {
-                if (var == ((SchOPair)vars).car()) {
+                if (var == vars.car()) {
                     ((SchOPair)vals).set_car(val);
                     return;
                 }
-                vars = ((SchOPair)vars).cdr();
-                vals = ((SchOPair)vals).cdr();
+                vars = vars.cdr();
+                vals = vals.cdr();
             }
             //noinspection AssignmentToMethodParameter
             env = env.enclosing_environment();
@@ -184,12 +185,12 @@ public class Repl {
         SchObject vals = frame.frame_values();
 
         while (!vars.istheemptylist()) {
-            if (var == ((SchOPair)vars).car()) {
+            if (var == vars.car()) {
                 ((SchOPair)vals).set_car(val);
                 return;
             }
-            vars = ((SchOPair)vars).cdr();
-            vals = ((SchOPair)vals).cdr();
+            vars = vars.cdr();
+            vals = vals.cdr();
         }
         add_binding_to_frame(var, val, frame);
     }
@@ -363,7 +364,7 @@ public class Repl {
         }
     }
 
-    public SchObject list_of_values(SchObject exp, SchObject env) {
+    private SchObject list_of_values(SchObject exp, SchObject env) {
         if (exp.is_no_operands()) return SchObject.theEmptyList;
         else return eval(exp.first_operand(), env).cons(list_of_values(exp.rest_operands(), env));
     }

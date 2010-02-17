@@ -10,7 +10,7 @@ public class SchOPPNumberEqual extends SchOPrimProc {
     public SchObject fn(SchObject args) {
         long value = ((SchOFixNum)((SchOPair)args).car()).value;
         //noinspection AssignmentToMethodParameter
-        while (!(args = ((SchOPair)args).cdr()).istheemptylist()) {
+        while (!(args = args.cdr()).istheemptylist()) {
             if (value != ((SchOFixNum)((SchOPair)args).car()).value) return SchObject.sfalse;
         }
         return SchObject.strue;

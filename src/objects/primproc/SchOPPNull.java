@@ -7,6 +7,6 @@ import objects.primproc.SchOPrimProc;
 public class SchOPPNull extends SchOPrimProc {
     @Override
     public SchObject fn(SchObject args) {
-        return ((SchOPair) args).car().istheemptylist() ? SchObject.strue : SchObject.sfalse;
+        return args.car().istheemptylist() ? SchObject.strue : SchObject.sfalse;
     }
 }

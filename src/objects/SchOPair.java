@@ -9,14 +9,6 @@ public class SchOPair extends SchObject {
         type = SchOType.PAIR;
     }
 
-    public SchObject car() {
-        return car;
-    }
-
-    public SchObject cdr() {
-        return cdr;
-    }
-
     public void set_car(SchObject a) {
         car = a;
     }

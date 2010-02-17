@@ -6,6 +6,6 @@ import objects.SchObject;
 public class SchOPPCons extends SchOPrimProc {
     @Override
     public SchObject fn(SchObject args) {
-        return ((SchOPair)args).car().cons(args.cadr());
+        return args.car().cons(args.cadr());
     }
 }

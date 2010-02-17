@@ -7,6 +7,6 @@ import objects.primproc.SchOPrimProc;
 public class SchOPPInteger extends SchOPrimProc {
     @Override
     public SchObject fn(SchObject args) {
-        return ((SchOPair)args).car().isfixnum() ? SchObject.strue : SchObject.sfalse;
+        return args.car().isfixnum() ? SchObject.strue : SchObject.sfalse;
     }
 }

@@ -1,6 +1,6 @@
 package objects;
 
-@SuppressWarnings({"ClassReferencesSubclass"})
+@SuppressWarnings({"ClassReferencesSubclass", "OverlyComplexClass"})
 public class SchObject {
     public static SchObject sfalse = new SchOBoolean(false);
     public static SchObject strue = new SchOBoolean(true);
@@ -62,7 +62,7 @@ public class SchObject {
 
     public boolean is_tagged_list(SchObject tag) {
         if (ispair()) {
-            SchObject the_car = ((SchOPair)this).car();
+            SchObject the_car = car();
             return the_car.issymbol() && the_car == tag;
         }
         return false;
@@ -113,67 +113,69 @@ public class SchObject {
     }
 
     public SchObject begin_actions() {
-        return ((SchOPair)this).cdr();
+        return cdr();
     }
 
     public boolean is_last_exp() {
-        return ((SchOPair)this).cdr().istheemptylist();
+        return cdr().istheemptylist();
     }
 
     public SchObject first_exp() {
-        return ((SchOPair)this).car();
+        return car();
     }
 
     public SchObject rest_exp() {
-        return ((SchOPair)this).cdr();
+        return cdr();
     }
 
     public SchObject car() {
-        return ((SchOPair) this).car();
+        //noinspection RedundantCast
+        return ((SchOPair)this).car;
     }
 
     public SchObject cdr() {
-        return ((SchOPair) this).car();
+        //noinspection RedundantCast
+        return ((SchOPair)this).cdr;
     }
 
     public SchObject caddr() {
-        return ((SchOPair)((SchOPair)((SchOPair) this).cdr()).cdr()).car();
+        return cdr().cdr().car();
     }
 
     public SchObject caar() {
-        return ((SchOPair)((SchOPair) this).car()).car();
+        return car().car();
     }
 
     public SchObject cddr() {
-        return ((SchOPair)((SchOPair) this).cdr()).cdr();
+        return cdr().cdr();
     }
 
     public SchObject cdar() {
-        return ((SchOPair)((SchOPair) this).car()).cdr();
+        return car().cdr();
     }
 
     public SchObject cadr() {
-        return ((SchOPair)((SchOPair) this).cdr()).car();
+        return cdr().car();
     }
 
     public SchObject cdddr() {
-        return ((SchOPair)((SchOPair)((SchOPair) this).cdr()).cdr()).cdr();
+        return cdr().cdr().cdr();
     }
 
     public SchObject cdadr() {
-        return ((SchOPair)((SchOPair)((SchOPair) this).cdr()).car()).cdr();
+        return cdr().car().cdr();
     }
 
     public SchObject caadr() {
-        return ((SchOPair)((SchOPair)((SchOPair) this).cdr()).car()).car();
+        return cdr().car().car();
     }
 
     public SchObject cadddr() {
-        return ((SchOPair) ((SchOPair) ((SchOPair) ((SchOPair) this).cdr()).cdr()).cdr()).car();
+        return cdr().cdr().cdr().car();
     }
 
     public SchObject cadadr() {
-        return ((SchOPair) ((SchOPair) ((SchOPair) ((SchOPair) this).cdr()).car()).cdr()).car();
+        return cdr().car().cdr().car();
     }
 
     public SchObject definition_value() {
@@ -207,11 +209,11 @@ public class SchObject {
     }
 
     public SchObject enclosing_environment() {
-        return ((SchOPair) this).cdr();
+        return cdr();
     }
 
     public SchObject first_frame() {
-        return ((SchOPair) this).car();
+        return car();
     }
 
     public SchObject make_frame(SchObject val) {
@@ -219,11 +221,11 @@ public class SchObject {
     }
 
     public SchObject frame_variables() {
-        return ((SchOPair) this).car();
+        return car();
     }
 
     public SchObject frame_values() {
-        return ((SchOPair) this).cdr();
+        return cdr();
     }
 
     public SchObject cons(SchObject b) {
@@ -236,7 +238,7 @@ public class SchObject {
 
     public SchObject if_alternative() {
         if (cdddr().istheemptylist()) {
-            return sfalse;
+            return SchObject.sfalse;
         } else {
             return cadddr();
         }
@@ -269,11 +271,11 @@ public class SchObject {
     }
 
     public SchObject operator() {
-        return ((SchOPair)this).car();
+        return car();
     }
 
     public SchObject operands() {
-        return ((SchOPair)this).cdr();
+        return cdr();
     }
 
     public boolean is_no_operands() {
@@ -281,11 +283,11 @@ public class SchObject {
     }
 
     public SchObject first_operand() {
-        return ((SchOPair)this).car();
+        return car();
     }
 
     public SchObject rest_operands() {
-        return ((SchOPair)this).cdr();
+        return cdr();
     }
 
     public SchObject let_to_application() {

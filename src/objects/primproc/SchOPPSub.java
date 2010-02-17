@@ -10,7 +10,7 @@ public class SchOPPSub extends SchOPrimProc {
     public SchObject fn(SchObject args) {
         long result = ((SchOFixNum)((SchOPair)args).car()).value;
         //noinspection AssignmentToMethodParameter
-        while (!(args = ((SchOPair)args).cdr()).istheemptylist()) {
+        while (!(args = args.cdr()).istheemptylist()) {
             result -= ((SchOFixNum)((SchOPair)args).car()).value;
         }
         return new SchOFixNum(result);

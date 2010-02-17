@@ -12,7 +12,7 @@ public class SchOPPPlus extends SchOPrimProc {
         while (!args.istheemptylist()) {
             result += ((SchOFixNum)((SchOPair)args).car()).value;
             //noinspection AssignmentToMethodParameter
-            args = ((SchOPair)args).cdr();
+            args = args.cdr();
         }
         return new SchOFixNum(result);
     }

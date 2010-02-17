@@ -6,7 +6,7 @@ public class SchOPPEq extends SchOPrimProc {
     @Override
     public SchObject fn(SchObject args) {
         SchObject obj1, obj2;
-        obj1 = ((SchOPair)args).car();
+        obj1 = args.car();
         obj2 = args.cadr();
 
         if (obj1.type != obj2.type) return SchObject.sfalse;
