@@ -271,6 +271,24 @@ public class Repl {
                 exp = exp.rest_exp();
             }
             exp = exp.first_exp();
+        } else if (exp.is_and()) {
+            exp = exp.and_tests();
+            if (exp.istheemptylist()) return SchObject.strue;
+            while (!exp.is_last_exp()) {
+                SchObject result = eval(exp.first_exp(), env);
+                if (result.isfalse()) return result;
+                exp = exp.rest_exp();
+            }
+            exp = exp.first_exp();
+         } else if (exp.is_or()) {
+            exp = exp.or_tests();
+            if (exp.istheemptylist()) return SchObject.sfalse;
+            while (!exp.is_last_exp()) {
+                SchObject result = eval(exp.first_exp(), env);
+                if (result.istrue()) return result;
+                exp = exp.rest_exp();
+            }
+            exp = exp.first_exp();
         } else if (exp.is_application()) {
             SchObject proc = eval(exp.operator(), env);
             SchObject args = list_of_values(exp.operands(), env);

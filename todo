@@ -20,7 +20,7 @@ X Lambda
 X Begin
 X Cond
 X Let
-- And and Or
+X And and Or
 - Apply
 - Eval
 - I/O

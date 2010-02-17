@@ -15,6 +15,8 @@ public class SchObject {
     public static SchObject begin_symbol = SchOSymbol.makeSymbol("begin");
     public static SchObject cond_symbol = SchOSymbol.makeSymbol("cond");
     public static SchObject let_symbol = SchOSymbol.makeSymbol("let");
+    public static SchObject and_symbol = SchOSymbol.makeSymbol("and");
+    public static SchObject or_symbol = SchOSymbol.makeSymbol("or");
 
     public boolean isfixnum() {
         return type == SchOType.FIXNUM;
@@ -82,6 +84,14 @@ public class SchObject {
 
     public boolean is_if() {
         return is_tagged_list(SchObject.if_symbol);
+    }
+
+    public boolean is_and() {
+        return is_tagged_list(SchObject.and_symbol);
+    }
+
+    public boolean is_or() {
+        return is_tagged_list(SchObject.or_symbol);
     }
 
     public boolean is_cond() {
@@ -250,6 +260,14 @@ public class SchObject {
 
     public SchObject if_predicate() {
         return cadr();
+    }
+
+    public SchObject and_tests() {
+        return cdr();
+    }
+
+    public SchObject or_tests() {
+        return cdr();
     }
 
     public SchObject cond_predicate() {
