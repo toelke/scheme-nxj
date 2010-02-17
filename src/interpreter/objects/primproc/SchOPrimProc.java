@@ -11,5 +11,9 @@ public abstract class SchOPrimProc extends SchObject {
         return false;
     }
 
+    public boolean is_eval() {
+        return false;
+    }
+
     public abstract SchObject fn(SchObject args);
 }

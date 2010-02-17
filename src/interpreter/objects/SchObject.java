@@ -361,6 +361,14 @@ public class SchObject {
         return car().cons(cdr().prepare_apply_operands());
     }
 
+    public SchObject eval_expression() {
+        return car();
+    }
+
+    public SchObject eval_environment() {
+        return cadr();
+    }
+
     public enum SchOType {
         BOOLEAN, CHARACTER, STRING, THEEMPTYLIST, PAIR, SYMBOL, PRIMITIVE_PROC, COMPOUND_PROC, FIXNUM
     }

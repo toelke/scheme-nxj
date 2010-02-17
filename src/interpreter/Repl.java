@@ -15,49 +15,59 @@ public class Repl {
     private MyInputStream in;
     private PrintStream out;
 
-    private SchObject the_global_environment;
+    private static SchObject the_global_environment;
 
     public Repl (InputStream i, OutputStream o) {
         in = new MyInputStream(i);
         out = new PrintStream(o);
 
-        the_global_environment = setup_environment();
+        Repl.the_global_environment = Repl.make_environment();
+    }
 
-        define_variable(SchOSymbol.makeSymbol("null?"), new SchOPPNull(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol("boolean?"), new SchOPPBoolean(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol("string?"), new SchOPPString(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol("character?"), new SchOPPChar(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol("integer?"), new SchOPPInteger(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol("symbol?"), new SchOPPSymbol(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol("pair?"), new SchOPPPair(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol("procedure?"), new SchOPPProcedure(), the_global_environment);
+    public static SchObject make_environment() {
+        SchObject env = Repl.setup_environment();
 
-        define_variable(SchOSymbol.makeSymbol("int->char"), new SchOPPIntegerToChar(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol("char->int"), new SchOPPCharToInteger(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol("symbol->string"), new SchOPPSymbolToString(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol("string->symbol"), new SchOPPStringToSymbol(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol("string->number"), new SchOPPStringToNumber(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol("number->string"), new SchOPPNumberToString(), the_global_environment);
+        Repl.define_variable(SchOSymbol.makeSymbol("null?"), new SchOPPNull(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("boolean?"), new SchOPPBoolean(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("string?"), new SchOPPString(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("character?"), new SchOPPChar(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("integer?"), new SchOPPInteger(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("symbol?"), new SchOPPSymbol(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("pair?"), new SchOPPPair(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("procedure?"), new SchOPPProcedure(), env);
 
-        define_variable(SchOSymbol.makeSymbol("+"), new SchOPPPlus(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol("-"), new SchOPPSub(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol("*"), new SchOPPMul(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol("/"), new SchOPPQuot(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol("%"), new SchOPPRem(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol("="), new SchOPPNumberEqual(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol(">"), new SchOPPGreaterThan(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol("<"), new SchOPPLessThan(), the_global_environment);
+        Repl.define_variable(SchOSymbol.makeSymbol("int->char"), new SchOPPIntegerToChar(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("char->int"), new SchOPPCharToInteger(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("symbol->string"), new SchOPPSymbolToString(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("string->symbol"), new SchOPPStringToSymbol(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("string->number"), new SchOPPStringToNumber(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("number->string"), new SchOPPNumberToString(), env);
 
-        define_variable(SchOSymbol.makeSymbol("cons"), new SchOPPCons(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol("car"), new SchOPPCar(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol("cdr"), new SchOPPCdr(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol("set-car!"), new SchOPPSetCar(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol("set-cdr!"), new SchOPPSetCdr(), the_global_environment);
-        define_variable(SchOSymbol.makeSymbol("list"), new SchOPPList(), the_global_environment);
+        Repl.define_variable(SchOSymbol.makeSymbol("+"), new SchOPPPlus(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("-"), new SchOPPSub(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("*"), new SchOPPMul(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("/"), new SchOPPQuot(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("%"), new SchOPPRem(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("="), new SchOPPNumberEqual(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol(">"), new SchOPPGreaterThan(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("<"), new SchOPPLessThan(), env);
 
-        define_variable(SchOSymbol.makeSymbol("eq?"), new SchOPPEq(), the_global_environment);
+        Repl.define_variable(SchOSymbol.makeSymbol("cons"), new SchOPPCons(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("car"), new SchOPPCar(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("cdr"), new SchOPPCdr(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("set-car!"), new SchOPPSetCar(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("set-cdr!"), new SchOPPSetCdr(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("list"), new SchOPPList(), env);
 
-        define_variable(SchOSymbol.makeSymbol("apply"), new SchOPPApply(), the_global_environment);
+        Repl.define_variable(SchOSymbol.makeSymbol("eq?"), new SchOPPEq(), env);
+
+        Repl.define_variable(SchOSymbol.makeSymbol("apply"), new SchOPPApply(), env);
+
+        Repl.define_variable(SchOSymbol.makeSymbol("eval"), new SchOPPEval(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("environment"), new SchOPPEnvironment(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("null-environment"), new SchOPPNullEnvironment(), env);
+        Repl.define_variable(SchOSymbol.makeSymbol("interactive-environment"), new SchOPPInteractiveEnvironment(), env);
+        return env;
     }
 
     public SchObject read() throws IOException {
@@ -137,12 +147,12 @@ public class Repl {
         return null; // Java is dumb
     }
 
-    private void add_binding_to_frame(SchObject var, SchObject val, SchObject frame) {
+    private static void add_binding_to_frame(SchObject var, SchObject val, SchObject frame) {
         ((SchOPair)frame).set_car(var.cons(frame.car()));
         ((SchOPair)frame).set_cdr(val.cons(frame.cdr()));
     }
 
-    private SchObject extend_environment(SchObject vars, SchObject vals, SchObject base) {
+    private static SchObject extend_environment(SchObject vars, SchObject vals, SchObject base) {
         return vars.make_frame(vals).cons(base);
     }
 
@@ -183,7 +193,7 @@ public class Repl {
         Utils.endWithError(1, "Unbound variable '" + ((SchOSymbol)var).value + "'\n");
     }
 
-    private void define_variable(SchObject var, SchObject val, SchObject env) {
+    private static void define_variable(SchObject var, SchObject val, SchObject env) {
         SchObject frame = env.first_frame();
         SchObject vars = frame.frame_variables();
         SchObject vals = frame.frame_values();
@@ -196,11 +206,11 @@ public class Repl {
             vars = vars.cdr();
             vals = vals.cdr();
         }
-        add_binding_to_frame(var, val, frame);
+        Repl.add_binding_to_frame(var, val, frame);
     }
 
-    private SchObject setup_environment() {
-        return extend_environment(SchObject.theEmptyList, SchObject.theEmptyList, SchObject.the_empty_environment);
+    public static SchObject setup_environment() {
+        return Repl.extend_environment(SchObject.theEmptyList, SchObject.theEmptyList, SchObject.the_empty_environment);
     }
 
     private SchObject read_pair() throws IOException {
@@ -243,12 +253,13 @@ public class Repl {
     }
 
     private SchObject eval_definition(SchObject exp, SchObject env) {
-        define_variable(exp.definition_variable(), eval(exp.definition_value(), env), env);
+        Repl.define_variable(exp.definition_variable(), eval(exp.definition_value(), env), env);
         return SchObject.ok_symbol;
     }
 
     @SuppressWarnings({"AssignmentToMethodParameter"})
     public SchObject eval(SchObject exp, SchObject env) {
+        tailcall:
         for(;;)
         if (exp.is_self_evaluating()) {
             return exp;
@@ -302,10 +313,17 @@ public class Repl {
                 args = args.apply_operands();
             }
 
+            if (proc.isprimproc() && ((SchOPrimProc)proc).is_eval()) {
+                exp = args.eval_expression();
+                env = args.eval_environment();
+                //noinspection UnnecessaryLabelOnContinueStatement
+                continue tailcall;
+            }
+
             if (proc.isprimproc()) return ((SchOPrimProc)proc).fn(args);
             else if (proc.iscompproc()) {
-                SchOCompoundProc cproc = (SchOCompoundProc) proc;
-                env = extend_environment(cproc.parameters, args, cproc.env);
+                @SuppressWarnings({"ConstantConditions"}) SchOCompoundProc cproc = (SchOCompoundProc) proc;
+                env = Repl.extend_environment(cproc.parameters, args, cproc.env);
                 exp = cproc.body.make_begin();
             } else {
                 Utils.endWithError(1, "unknown procedure type\n");
@@ -404,10 +422,14 @@ public class Repl {
             //noinspection InfiniteLoopStatement
             for(;;) {
                 System.out.printf("> ");
-                r.write(r.eval(r.read(), r.the_global_environment));
+                r.write(r.eval(r.read(), Repl.the_global_environment));
                 System.out.printf("\n");
             }
         } catch (IOException ignored) {}
+    }
+
+    public static SchObject get_the_global_environment() {
+        return Repl.the_global_environment;
     }
 }
 
