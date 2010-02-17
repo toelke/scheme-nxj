@@ -54,6 +54,8 @@ public class Repl {
         define_variable(SchOSymbol.makeSymbol("list"), new SchOPPList(), the_global_environment);
 
         define_variable(SchOSymbol.makeSymbol("eq?"), new SchOPPEq(), the_global_environment);
+
+        define_variable(SchOSymbol.makeSymbol("apply"), new SchOPPApply(), the_global_environment);
     }
 
     public SchObject read() throws IOException {
@@ -292,6 +294,12 @@ public class Repl {
         } else if (exp.is_application()) {
             SchObject proc = eval(exp.operator(), env);
             SchObject args = list_of_values(exp.operands(), env);
+
+            if (proc.isprimproc() && ((SchOPrimProc)proc).is_apply()) {
+                proc = args.apply_operator();
+                args = args.apply_operands();
+            }
+
             if (proc.isprimproc()) return ((SchOPrimProc)proc).fn(args);
             else if (proc.iscompproc()) {
                 SchOCompoundProc cproc = (SchOCompoundProc) proc;

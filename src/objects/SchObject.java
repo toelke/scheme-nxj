@@ -348,6 +348,19 @@ public class SchObject {
         return operator.cons(operands);
     }
 
+    public SchObject apply_operator() {
+        return car();
+    }
+
+    public SchObject apply_operands() {
+        return cdr().prepare_apply_operands();
+    }
+
+    private SchObject prepare_apply_operands() {
+        if (cdr().istheemptylist()) return car();
+        return car().cons(cdr().prepare_apply_operands());
+    }
+
     public enum SchOType {
         BOOLEAN, CHARACTER, STRING, THEEMPTYLIST, PAIR, SYMBOL, PRIMITIVE_PROC, COMPOUND_PROC, FIXNUM
     }

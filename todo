@@ -21,7 +21,7 @@ X Begin
 X Cond
 X Let
 X And and Or
-- Apply
+X Apply
 - Eval
 - I/O
 - Std Lib

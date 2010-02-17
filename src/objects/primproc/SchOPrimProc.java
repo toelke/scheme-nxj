@@ -7,5 +7,9 @@ public abstract class SchOPrimProc extends SchObject {
         type = SchOType.PRIMITIVE_PROC;
     }
 
+    public boolean is_apply() {
+        return false;
+    }
+
     public abstract SchObject fn(SchObject args);
 }
