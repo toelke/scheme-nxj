@@ -1,9 +1,12 @@
 package interpreter.utils;
 
 import java.io.IOException;
+import java.io.PrintStream;
 
 @SuppressWarnings({"UtilityClass", "UtilityClassWithoutPrivateConstructor", "StaticMethodOnlyUsedInOneClass"})
 public class Utils {
+    private static PrintStream err;
+
     public static boolean isdigit(int c) {
         return Character.isDigit((char)c);
     }
@@ -21,7 +24,7 @@ public class Utils {
     }
 
     public static void endWithError(int i, String s) {
-        System.err.print(s);
+        Utils.err.print(s);
         System.exit(i);
     }
 
@@ -39,5 +42,9 @@ public class Utils {
             in.unread(c);
             break;
         }
+    }
+
+    public static void setErr(PrintStream err) {
+        Utils.err = err;
     }
 }

@@ -1,6 +1,7 @@
 package interpreter;
 
 import interpreter.utils.Environment;
+import interpreter.utils.Utils;
 
 import java.io.IOException;
 
@@ -10,6 +11,7 @@ public class PCMain {
     }
 
     public static void main(String... args) {
+        Utils.setErr(System.err);
         Repl r = new Repl(System.in, System.out);
 
         try {

@@ -16,7 +16,7 @@ public class Repl {
     private MyInputStream in;
     private PrintStream out;
 
-    public Repl (InputStream i, OutputStream o) {
+    public Repl (InputStream i, PrintStream o) {
         in = new MyInputStream(i);
         out = new PrintStream(o);
     }
