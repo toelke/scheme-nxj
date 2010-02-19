@@ -334,18 +334,5 @@ public class Repl {
         if (exp.is_no_operands()) return SchObject.theEmptyList;
         else return eval(exp.first_operand(), env).cons(list_of_values(exp.rest_operands(), env));
     }
-
-    public static void main(String... args) {
-        Repl r = new Repl(System.in, System.out);
-
-        try {
-            //noinspection InfiniteLoopStatement
-            for(;;) {
-                System.out.print("> ");
-                r.write(r.eval(r.read(), Environment.the_global_environment));
-                System.out.print("\n");
-            }
-        } catch (IOException ignored) {}
-    }
 }
 
