@@ -5,7 +5,7 @@ import java.io.IOException;
 @SuppressWarnings({"UtilityClass", "UtilityClassWithoutPrivateConstructor", "StaticMethodOnlyUsedInOneClass"})
 public class Utils {
     public static boolean isdigit(int c) {
-        return Character.isDigit(c);
+        return Character.isDigit((char)c);
     }
 
     public static boolean isdelimiter(int c) {
@@ -13,11 +13,11 @@ public class Utils {
     }
 
     public static boolean isspace(int c) {
-        return Character.isSpaceChar(c) || c == '\n';
+        return Character.isSpaceChar((char)c) || c == '\n';
     }
 
     public static boolean isinitial(int c) {
-        return  Character.isLetter(c) || c == '*' || c == '/' || c == '>' || c == '<' || c == '=' || c == '?' || c == '!';
+        return  Character.isLetter((char)c) || c == '*' || c == '/' || c == '>' || c == '<' || c == '=' || c == '?' || c == '!';
     }
 
     public static void endWithError(int i, String s) {
