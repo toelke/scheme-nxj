@@ -13,11 +13,11 @@ public class Utils {
     }
 
     public static boolean isspace(int c) {
-        return Character.isSpaceChar((char)c) || c == '\n';
+        return (char) c == ' ' || (char) c == '\t' || c == '\n';
     }
 
     public static boolean isinitial(int c) {
-        return  Character.isLetter((char)c) || c == '*' || c == '/' || c == '>' || c == '<' || c == '=' || c == '?' || c == '!';
+        return  (char) c >= 'a' && (char) c <= 'z' || (char) c >= 'A' && (char) c <= 'Z' || c == '*' || c == '/' || c == '>' || c == '<' || c == '=' || c == '?' || c == '!';
     }
 
     public static void endWithError(int i, String s) {
