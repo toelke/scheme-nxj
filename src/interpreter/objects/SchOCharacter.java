@@ -19,8 +19,7 @@ public class SchOCharacter extends SchObject {
 
         switch(c) {
             case -1:
-                System.err.printf("incomplete character literal!\n");
-                System.exit(1);
+                Utils.endWithError(1, "incomplete character literal!\n");
                 break;
             case 's':
                 if (in.peek() == 'p') {
@@ -43,8 +42,7 @@ public class SchOCharacter extends SchObject {
 
     private static void peekExpectedDelimiter(MyInputStream in) throws IOException {
         if (!Utils.isdelimiter(in.peek())) {
-            System.err.printf("character not followed by delimiter\n");
-            System.exit(1);
+            Utils.endWithError(1, "character not followed by delimiter\n");
         }
     }
 
@@ -52,7 +50,7 @@ public class SchOCharacter extends SchObject {
         for (char c: s.toCharArray()) {
             char r = (char)in.read();
             if (c != r) {
-                System.err.printf("unexpected character: %c\n", r);
+                Utils.endWithError(1, "unexpected character: " + r + "\n");
                 System.exit(1);
             }
         }

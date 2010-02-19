@@ -20,9 +20,9 @@ public class Utils {
         return  Character.isLetter(c) || c == '*' || c == '/' || c == '>' || c == '<' || c == '=' || c == '?' || c == '!';
     }
 
-    public static void endWithError(int i, String s, Object ... args) {
-        System.err.printf(s, args);
-        System.exit(1);
+    public static void endWithError(int i, String s) {
+        System.err.print(s);
+        System.exit(i);
     }
 
     public static void eat_whitespace(MyInputStream in) throws IOException {

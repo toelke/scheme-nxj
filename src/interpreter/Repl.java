@@ -38,8 +38,7 @@ public class Repl {
                 case '\\':
                     return SchOCharacter.readCharacter(in);
                 default:
-                    System.err.printf("unknown boolean or character literal\n");
-                    System.exit(1);
+                    Utils.endWithError(1, "unknown boolean or character literal\n");
             }
         } else if (c == '\'') {
             return SchObject.quote_symbol.cons(read().cons(SchObject.theEmptyList));
@@ -91,8 +90,7 @@ public class Repl {
         } else if (c == '(') {
             return read_pair();
         } else {
-            System.err.printf("Unexpected %c\n", (char)c);
-            System.exit(1);
+            Utils.endWithError(1, "Unexpected " + (char)c + "\n");
         }
         Utils.endWithError(1, "Read Illegal State!\n");
         return null; // Java is dumb
@@ -258,23 +256,23 @@ public class Repl {
     public void write(SchObject obj) {
         switch(obj.type) {
             case FIXNUM:
-                out.printf("%d", ((SchOFixNum)obj).value);
+                out.print("" + ((SchOFixNum)obj).value);
                 break;
             case BOOLEAN:
-                out.printf("#%c", obj.isfalse() ? 'f':'t');
+                out.print("#" + (obj.isfalse() ? "f":"t"));
                 break;
             case CHARACTER:
-                out.printf("#\\");
+                out.print("#\\");
                 char c = ((SchOCharacter) obj).value;
                 switch(c) {
                     case '\n':
-                        out.printf("newline");
+                        out.print("newline");
                         break;
                     case ' ':
-                        out.printf("space");
+                        out.print("space");
                         break;
                     default:
-                        out.printf("%c", c);
+                        out.print("" + c);
                         break;
                 }
                 break;
@@ -282,27 +280,27 @@ public class Repl {
                 out.print(((SchOSymbol)obj).value);
                 break;
             case STRING:
-                out.printf("\"");
+                out.print("\"");
                 for (char s: ((SchOString)obj).value.toCharArray()) {
                     switch(s) {
                         case '\n':
-                            out.printf("\\n");
+                            out.print("\\n");
                             break;
                         case '\\':
-                            out.printf("\\\\");
+                            out.print("\\\\");
                             break;
                         case '"':
-                            out.printf("\\\"");
+                            out.print("\\\"");
                             break;
                         default:
-                            out.printf("%c", s);
+                            out.print("" + s);
                             break;
                     }
                 }
-                out.printf("\"");
+                out.print("\"");
                 break;
             case THEEMPTYLIST:
-                out.printf("()");
+                out.print("()");
                 break;
             case PAIR:
                 out.print("(");
@@ -343,9 +341,9 @@ public class Repl {
         try {
             //noinspection InfiniteLoopStatement
             for(;;) {
-                System.out.printf("> ");
+                System.out.print("> ");
                 r.write(r.eval(r.read(), Environment.the_global_environment));
-                System.out.printf("\n");
+                System.out.print("\n");
             }
         } catch (IOException ignored) {}
     }
