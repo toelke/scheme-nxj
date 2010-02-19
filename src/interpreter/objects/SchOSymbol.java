@@ -1,16 +1,17 @@
 package interpreter.objects;
 
-import java.util.HashMap;
+import java.util.Hashtable;
 
+@SuppressWarnings({"unchecked", "UseOfObsoleteCollectionType"})
 public class SchOSymbol extends SchObject {
     public String value;
-    private static HashMap<String, SchOSymbol> symbols;
+    private static Hashtable symbols;
 
     @SuppressWarnings({"StaticMethodOnlyUsedInOneClass"})
     public static SchOSymbol makeSymbol(String v) {
-        if (SchOSymbol.symbols == null) SchOSymbol.symbols = new HashMap<String, SchOSymbol>();
-        if (SchOSymbol.symbols.containsKey(v))
-            return SchOSymbol.symbols.get(v);
+        if (SchOSymbol.symbols == null) SchOSymbol.symbols = new Hashtable();
+        if (SchOSymbol.symbols.get(v) != null)
+            return (SchOSymbol)SchOSymbol.symbols.get(v);
         return new SchOSymbol(v);
     }
 
