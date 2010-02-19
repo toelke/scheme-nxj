@@ -14,19 +14,19 @@ public class NXTMain {
     }
 
     public static void main(String... args) {
-		NXTConnection c = USB.waitForConnection();
-		InputStream in = c.openInputStream();
-		PrintStream out = new PrintStream(c.openOutputStream());
-		Repl r = new Repl(in, out);
-		Utils.setErr(out);
+        NXTConnection c = USB.waitForConnection();
+        InputStream in = c.openInputStream();
+        PrintStream out = new PrintStream(c.openOutputStream());
+        Repl r = new Repl(in, out);
+        Utils.setErr(out);
 
-		try {
-			//noinspection InfiniteLoopStatement
-			for(;;) {
-				out.print("> ");
-				r.write(r.eval(r.read(), Environment.the_global_environment));
-				out.print("\n");
-			}
-		} catch (IOException ignored) {}
+        try {
+            //noinspection InfiniteLoopStatement
+            for(;;) {
+                out.print("> ");
+                r.write(r.eval(r.read(), Environment.the_global_environment));
+                out.print("\n");
+            }
+        } catch (IOException ignored) {}
     }
 }
